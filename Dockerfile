@@ -33,7 +33,7 @@ ENV KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
 ENV KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
 
 # Disable Infinispan JGroups clustering
-ENV JGROUPS_BIND_ADDR=non_cluster
+ENV KC_CACHE_STACK=local
 
 # Entrypoint to start Keycloak
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start", "--optimized"]
