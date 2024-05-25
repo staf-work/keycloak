@@ -15,13 +15,22 @@ RUN /opt/keycloak/bin/kc.sh build
 FROM quay.io/keycloak/keycloak:latest
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
-# Change these values to point to your running PostgreSQL instance
+# Environment variables expected to be set by the deployment platform
+ENV KC_PROXY_ADDRESS_FORWARDING=true
+ENV KC_HOSTNAME_STRICT=false
+ENV KC_HTTP_ENABLED=true
+
+# Database Configuration
 ENV KC_DB=postgres
-ENV KC_DB_URL=jdbc:postgresql://db-postgresql-sgp1-38592-do-user-16628503-0.c.db.ondigitalocean.com:25060/keycloakdb
-ENV KC_DB_USERNAME=keycloakuser
-ENV KC_DB_PASSWORD=yourpassword
+ENV KC_DB_USERNAME=${KC_DB_USERNAME}
+ENV KC_DB_PASSWORD=${KC_DB_PASSWORD}
+ENV KC_DB_URL_HOST=${KC_DB_URL_HOST}
+ENV KC_DB_URL_PORT=${KC_DB_URL_PORT}
+ENV KC_DB_URL_DATABASE=${KC_DB_URL_DATABASE}
 
-# Set hostname (you can also set other optional Keycloak environment variables as needed)
-ENV KC_HOSTNAME=your-app-domain
+# Admin User Configuration
+ENV KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
+ENV KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
 
-ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
+# Entrypoint to start Keycloak
+ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start", "--optimized"]
