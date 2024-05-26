@@ -9,8 +9,11 @@ ENV KC_DB=postgres
 
 WORKDIR /opt/keycloak
 
+# Copy custom JGroups configuration
+COPY jgroups-tcp.xml /opt/keycloak/conf/jgroups-tcp.xml
+
 # Build Keycloak with the necessary configuration
-RUN /opt/keycloak/bin/kc.sh build
+RUN /opt/keycloak/bin/kc.sh build --cache-config-file=/opt/keycloak/conf/jgroups-tcp.xml
 
 FROM quay.io/keycloak/keycloak:latest
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
